@@ -5,4 +5,5 @@ import com.insurance.insurance.payload.InsuranceDto;
 public interface InsuranceService {
     InsuranceDto createInsurance(InsuranceDto insuranceDto);
 
+    InsuranceDto getDetailesById(long id);
 }
