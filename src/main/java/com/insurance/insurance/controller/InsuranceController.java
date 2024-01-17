@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/insurances")
 public class InsuranceController {
@@ -23,5 +25,10 @@ public class InsuranceController {
     public ResponseEntity<InsuranceDto> getDetailesById(@PathVariable long id){
         InsuranceDto dto = insuranceService.getDetailesById(id);
         return new ResponseEntity<>(dto,HttpStatus.OK);
+    }
+    @GetMapping
+    public List<InsuranceDto> getAllRecords(){
+        List<InsuranceDto> dtos=insuranceService.getAllRecords();
+        return dtos;
     }
 }

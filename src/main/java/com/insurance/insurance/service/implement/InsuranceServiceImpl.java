@@ -7,6 +7,9 @@ import com.insurance.insurance.repository.InsuranceRepository;
 import com.insurance.insurance.service.InsuranceService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class InsuranceServiceImpl implements InsuranceService {
 
@@ -18,31 +21,47 @@ public class InsuranceServiceImpl implements InsuranceService {
 
     @Override
     public InsuranceDto createInsurance(InsuranceDto insuranceDto) {
-        Insurance insurances= new Insurance();
-        insurances.setCustomerName(insuranceDto.getCustomerName());
-        insurances.setEmail(insuranceDto.getEmail());
-        insurances.setMobileNumber(insuranceDto.getMobileNumber());
-        insurances.setVehicleNumber(insuranceDto.getVehicleNumber());
+        Insurance insurances = mapToEntity(insuranceDto);
 
         Insurance saveDeatiles = insuranceRepository.save(insurances);
-        InsuranceDto dto= new InsuranceDto();
-        dto.setCustomerName(saveDeatiles.getCustomerName());
-        dto.setEmail(saveDeatiles.getEmail());
-        dto.setMobileNumber(saveDeatiles.getMobileNumber());
-        dto.setVehicleNumber(saveDeatiles.getVehicleNumber());
+
+        InsuranceDto dto = mapToDto(saveDeatiles);
         return dto;
     }
+
     @Override
     public InsuranceDto getDetailesById(long id) {
         Insurance insurance = insuranceRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("information not found with id: " +id)
+                () -> new ResourceNotFoundException("information not found with id: " + id)
         );
-        InsuranceDto dto= new InsuranceDto();
+        InsuranceDto dto = mapToDto(insurance);
+        return dto;
+    }
+
+    @Override
+    public List<InsuranceDto> getAllRecords() {
+        List<Insurance> insurances = insuranceRepository.findAll();
+        List<InsuranceDto> dtos = insurances.stream().map(i -> mapToDto(i)).collect(Collectors.toList());
+        return dtos;
+    }
+
+    InsuranceDto mapToDto(Insurance insurance) {
+        InsuranceDto dto = new InsuranceDto();
         dto.setId(insurance.getId());
         dto.setCustomerName(insurance.getCustomerName());
-        dto.setEmail(insurance.getEmail());
         dto.setVehicleNumber(insurance.getVehicleNumber());
+        dto.setEmail(insurance.getEmail());
         dto.setMobileNumber(insurance.getMobileNumber());
         return dto;
+    }
+
+    Insurance mapToEntity(InsuranceDto postDto) {
+        Insurance insurance = new Insurance();
+        insurance.setId(postDto.getId());
+        insurance.setCustomerName(postDto.getCustomerName());
+        insurance.setVehicleNumber(postDto.getVehicleNumber());
+        insurance.setEmail(postDto.getEmail());
+        insurance.setMobileNumber(postDto.getMobileNumber());
+        return insurance;
     }
 }
