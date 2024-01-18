@@ -26,9 +26,13 @@ public class InsuranceController {
         InsuranceDto dto = insuranceService.getDetailesById(id);
         return new ResponseEntity<>(dto,HttpStatus.OK);
     }
+    // http://localhost:8080/api/insurances?pageNo=0&pageSize=3
     @GetMapping
-    public List<InsuranceDto> getAllRecords(){
-        List<InsuranceDto> dtos=insuranceService.getAllRecords();
+    public List<InsuranceDto> getAllRecords(
+            @RequestParam(name="pageNo",required = false,defaultValue = "0")int pageNo,
+            @RequestParam(name="pageSize",required = false,defaultValue = "0")int pageSize
+    ){
+        List<InsuranceDto> dtos=insuranceService.getAllRecords(pageNo,pageSize);
         return dtos;
     }
 }

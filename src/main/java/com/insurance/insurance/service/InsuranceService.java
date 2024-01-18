@@ -9,5 +9,5 @@ public interface InsuranceService {
 
     InsuranceDto getDetailesById(long id);
 
-    List<InsuranceDto> getAllRecords();
+    List<InsuranceDto> getAllRecords(int pageNo, int pageSize);
 }

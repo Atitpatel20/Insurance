@@ -5,6 +5,9 @@ import com.insurance.insurance.exception.ResourceNotFoundException;
 import com.insurance.insurance.payload.InsuranceDto;
 import com.insurance.insurance.repository.InsuranceRepository;
 import com.insurance.insurance.service.InsuranceService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,8 +42,10 @@ public class InsuranceServiceImpl implements InsuranceService {
     }
 
     @Override
-    public List<InsuranceDto> getAllRecords() {
-        List<Insurance> insurances = insuranceRepository.findAll();
+    public List<InsuranceDto> getAllRecords(int pageNo, int pageSize) {
+        Pageable pageable=PageRequest.of(pageNo,pageSize);
+        Page<Insurance> pageInsurances = insuranceRepository.findAll(pageable);
+        List<Insurance> insurances = pageInsurances.getContent();
         List<InsuranceDto> dtos = insurances.stream().map(i -> mapToDto(i)).collect(Collectors.toList());
         return dtos;
     }
