@@ -26,13 +26,15 @@ public class InsuranceController {
         InsuranceDto dto = insuranceService.getDetailesById(id);
         return new ResponseEntity<>(dto,HttpStatus.OK);
     }
-    // http://localhost:8080/api/insurances?pageNo=0&pageSize=3
+    // http://localhost:8080/api/insurances?pageNo=0&pageSize=3&sortBy=email&sortDir=Desc
     @GetMapping
     public List<InsuranceDto> getAllRecords(
             @RequestParam(name="pageNo",required = false,defaultValue = "0")int pageNo,
-            @RequestParam(name="pageSize",required = false,defaultValue = "0")int pageSize
+            @RequestParam(name="pageSize",required = false,defaultValue = "5")int pageSize,
+            @RequestParam(name="sortBy",required = false,defaultValue = "id")String sortBy,
+            @RequestParam(name="sortDir",required = false,defaultValue = "asc")String sortDir
     ){
-        List<InsuranceDto> dtos=insuranceService.getAllRecords(pageNo,pageSize);
+        List<InsuranceDto> dtos=insuranceService.getAllRecords(pageNo,pageSize,sortBy,sortDir);
         return dtos;
     }
 }

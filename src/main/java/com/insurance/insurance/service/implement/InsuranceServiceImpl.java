@@ -8,6 +8,7 @@ import com.insurance.insurance.service.InsuranceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,8 +43,9 @@ public class InsuranceServiceImpl implements InsuranceService {
     }
 
     @Override
-    public List<InsuranceDto> getAllRecords(int pageNo, int pageSize) {
-        Pageable pageable=PageRequest.of(pageNo,pageSize);
+    public List<InsuranceDto> getAllRecords(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize,sort);
         Page<Insurance> pageInsurances = insuranceRepository.findAll(pageable);
         List<Insurance> insurances = pageInsurances.getContent();
         List<InsuranceDto> dtos = insurances.stream().map(i -> mapToDto(i)).collect(Collectors.toList());
