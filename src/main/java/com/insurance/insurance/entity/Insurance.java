@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
-@Table(name="insurances")
+@Table(name = "insurances")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +22,6 @@ public class Insurance {
     private String vehicleNumber;
     private long mobileNumber;
 
-
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurance")
+    private List<Policy> policies;
 }
