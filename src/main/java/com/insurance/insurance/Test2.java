@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
+//import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 
 public class Test2 {
     public static void main(String[] args) {
