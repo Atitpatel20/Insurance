@@ -1,7 +1,9 @@
 package com.insurance.insurance.controller;
 
+import com.insurance.insurance.entity.Role;
 import com.insurance.insurance.entity.User;
 import com.insurance.insurance.payload.SignUpDto;
+import com.insurance.insurance.repository.RoleRepository;
 import com.insurance.insurance.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -19,9 +24,11 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/signUp")
+    @PostMapping("/signup")
     public ResponseEntity<?> createRegistration(@RequestBody SignUpDto signUpDto) {
         if (userRepository.existsByEmail(signUpDto.getEmail())) {
             return new ResponseEntity<>("Email already exists!!", HttpStatus.BAD_REQUEST);
@@ -34,6 +41,10 @@ public class AuthController {
         user.setUsername(signUpDto.getUsername());
         user.setEmail(signUpDto.getEmail());
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
+        Role roles = roleRepository.findByName(signUpDto.getRoleType()).get();
+        Set<Role> convertToSet = new HashSet<>();
+        convertToSet.add(roles);
+        user.setRoles(convertToSet);
         userRepository.save(user);
         return new ResponseEntity<>("Registration done successfully", HttpStatus.CREATED);
     }
